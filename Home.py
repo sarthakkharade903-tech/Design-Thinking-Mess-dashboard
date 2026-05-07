@@ -670,3 +670,125 @@ st.markdown("""
     <div class="nav-hint">👈 Statistical Data &nbsp;·&nbsp; 📈 Charts &nbsp;·&nbsp; 🤖 AI Insights</div>
 </div>
 """, unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PROJECT TEAM
+# ══════════════════════════════════════════════════════════════════════════════
+
+# CSS only — separate call so Streamlit doesn't confuse style with content
+st.markdown("""
+<style>
+.team-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 28px 16px 24px 16px;
+    text-align: center;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+.team-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6);
+    border-radius: 16px 16px 0 0;
+}
+.team-card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6;
+    box-shadow: 0 16px 40px rgba(59,130,246,0.15);
+}
+.team-avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1d4ed8, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 14px auto;
+    border: 2px solid #334155;
+}
+.team-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+.team-role {
+    font-size: 0.78rem;
+    color: #64748b;
+    line-height: 1.5;
+    font-weight: 500;
+}
+.team-role-badge {
+    display: block;
+    width: 72px;
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: #93c5fd;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 0;
+    border-radius: 50px;
+    margin: 12px auto 0 auto;
+    text-align: center;
+    letter-spacing: 0.4px;
+}
+.site-footer {
+    text-align: center;
+    padding: 24px 0 8px 0;
+    border-top: 1px solid #1e293b;
+    margin-top: 24px;
+}
+.site-footer p {
+    color: #475569;
+    font-size: 0.82rem;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+.site-footer span { color: #3b82f6; font-weight: 600; }
+</style>
+""", unsafe_allow_html=True)
+
+# Section heading
+st.markdown("""
+<div class="section-head">
+    <h2>👨‍💻 Project Team</h2>
+    <p>The minds behind the Mess Feedback Intelligence Dashboard</p>
+    <div class="section-divider"></div>
+</div>
+""", unsafe_allow_html=True)
+
+# Team members using native st.columns — renders reliably
+team = [
+    ("🧠", "Sarthak Kharade",  "AI Integration & Dashboard", "Tech"),
+    ("🎨", "Samir Myanawar",   "UI & Visualization",         "Design"),
+    ("📋", "Soham Jawalkar",   "Data Collection",            "Data"),
+    ("📊", "Ayush Janunkar",   "Analysis & Testing",         "Testing"),
+    ("📝", "Atharva Nale",     "Research & Documentation",   "Research"),
+]
+
+cols = st.columns(5)
+for col, (emoji, name, role, badge) in zip(cols, team):
+    with col:
+        st.markdown(f"""
+        <div class="team-card">
+            <div class="team-avatar">{emoji}</div>
+            <div class="team-name">{name}</div>
+            <div class="team-role">{role}</div>
+            <div class="team-role-badge">{badge}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Footer
+st.markdown("""
+<div class="site-footer">
+    <p><span>PVGCOET</span> &nbsp;|&nbsp; Digital Feedback Management System &nbsp;|&nbsp; <span>2026</span></p>
+</div>
+""", unsafe_allow_html=True)
+
