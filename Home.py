@@ -7,7 +7,7 @@ st.set_page_config(
     page_icon="🍽️",
     layout="wide"
 )
-
+ 
 # ── Load Data ──────────────────────────────────────────────────────────────────
 @st.cache_data
 def load_data():
