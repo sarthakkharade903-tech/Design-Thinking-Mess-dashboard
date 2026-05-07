@@ -1,10 +1,11 @@
 # streamlit run "Home.py"
 import streamlit as st
 import pandas as pd
+import base64
 
 st.set_page_config(
     page_title="Mess Feedback Dashboard",
-    page_icon="🍽️",
+    page_icon="🍔",
     layout="wide"
 )
  
@@ -388,11 +389,80 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     margin-top: 16px;
 }
 
+/* ── QR Card ──────────────────────────────────────── */
+.qr-card {
+    background: linear-gradient(135deg, #1e293b 0%, #162032 100%);
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    box-shadow: 0 8px 40px rgba(59,130,246,0.10), 0 2px 12px rgba(0,0,0,0.35);
+    position: relative;
+    overflow: hidden;
+}
+.qr-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 5% 50%, rgba(99,102,241,0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+.qr-img-wrap {
+    flex-shrink: 0;
+    width: 130px; height: 130px;
+    border-radius: 14px;
+    border: 2px solid #334155;
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(59,130,246,0.18);
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+}
+.qr-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.qr-text { flex: 1; position: relative; }
+.qr-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.6px;
+    text-transform: uppercase; color: #64748b; margin-bottom: 8px;
+}
+.qr-title {
+    font-size: 1.25rem; font-weight: 800; color: #f1f5f9;
+    margin: 0 0 6px; line-height: 1.2;
+}
+.qr-title span {
+    background: linear-gradient(90deg, #60a5fa, #818cf8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.qr-desc { font-size: .85rem; color: #64748b; line-height: 1.6; margin: 0 0 16px; max-width: 380px; }
+.qr-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: #fff !important; text-decoration: none !important;
+    font-size: .85rem; font-weight: 700;
+    padding: 9px 22px; border-radius: 50px;
+    box-shadow: 0 4px 18px rgba(59,130,246,0.30);
+    transition: transform .2s, box-shadow .2s;
+    letter-spacing: .3px;
+}
+.qr-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99,102,241,0.40);
+}
+.qr-accent {
+    position: absolute; right: -20px; top: -20px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%);
+}
+
 /* Responsive tweaks */
 @media (max-width: 768px) {
     .stats-row, .steps-grid { grid-template-columns: repeat(2, 1fr); }
     .two-col-grid, .features-grid { grid-template-columns: 1fr; }
     .qr-banner { grid-template-columns: 1fr; }
+    .qr-card { flex-direction: column; text-align: center; padding: 24px 20px; gap: 20px; }
+    .qr-img-wrap { margin: 0 auto; }
+    .qr-desc { max-width: 100%; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -425,6 +495,40 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# QR FEEDBACK CARD
+def get_base64_image(image_path):
+    try:
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except Exception:
+        return ""
+
+qr_b64 = get_base64_image("assets/feedback_qr.jpeg")
+qr_img_html = f'<img src="data:image/jpeg;base64,{qr_b64}" alt="QR Code">' if qr_b64 else ''
+
+st.markdown(f"""
+<div class="qr-card">
+    <div class="qr-accent"></div>
+    <div class="qr-img-wrap">
+        {qr_img_html}
+    </div>
+    <div class="qr-text">
+        <div class="qr-eyebrow">📱 Student Feedback Portal</div>
+        <div class="qr-title">Scan to Submit <span>Feedback</span></div>
+        <p class="qr-desc">
+            Students can instantly rate their mess experience — Taste, Hygiene,
+            Temperature, Quantity &amp; more — by scanning the QR code or clicking the link below.
+        </p>
+        <a class="qr-btn"
+           href="https://docs.google.com/forms/d/e/1FAIpQLSfKgqcU2eikaDqUqWw1zlQEQUZ1063rqEMwu9uGawT5sJEe7w/viewform?usp=dialog"
+           target="_blank" rel="noopener noreferrer">
+            📋 Open Feedback Form
+        </a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LIVE STATS
