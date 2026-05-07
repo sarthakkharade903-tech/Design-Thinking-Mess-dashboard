@@ -41,50 +41,79 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
 /* ── Hero ─────────────────────────────────────────────── */
 .hero-section {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0f4c81 100%);
-    border-radius: 20px;
-    padding: 64px 48px;
+    background: linear-gradient(135deg, #0f172a 0%, #1a2744 45%, #0f4c81 100%);
+    border-radius: 24px;
+    padding: 72px 48px 64px 48px;
     text-align: center;
     margin-bottom: 40px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
 }
 .hero-section::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.15) 0%, transparent 60%),
-                radial-gradient(circle at 80% 20%, rgba(99,102,241,0.1) 0%, transparent 50%);
+    background:
+        radial-gradient(circle at 15% 50%, rgba(59,130,246,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 85% 15%, rgba(99,102,241,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 100%, rgba(15,76,129,0.25) 0%, transparent 60%);
+    pointer-events: none;
+}
+.hero-inner {
+    position: relative;
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
 }
 .hero-badge {
-    display: inline-block;
-    background: rgba(59,130,246,0.2);
-    border: 1px solid rgba(59,130,246,0.5);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.4);
     color: #93c5fd;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
-    padding: 6px 18px;
+    padding: 7px 20px;
     border-radius: 50px;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 .hero-title {
-    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
     font-weight: 800;
     color: #ffffff;
-    line-height: 1.15;
-    margin: 0 0 16px 0;
+    line-height: 1.12;
+    margin: 0 0 20px 0;
     position: relative;
+    letter-spacing: -0.5px;
 }
-.hero-title span { color: #60a5fa; }
+.hero-title span {
+    color: #60a5fa;
+    background: linear-gradient(90deg, #60a5fa, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: #94a3b8;
-    max-width: 620px;
+    max-width: 560px;
     margin: 0 auto 36px auto;
-    line-height: 1.7;
+    line-height: 1.75;
     position: relative;
+    font-weight: 400;
+}
+.hero-divider {
+    width: 48px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #6366f1);
+    border-radius: 4px;
+    margin: 0 auto 32px auto;
 }
 .hero-tags {
     display: flex;
@@ -94,13 +123,19 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     position: relative;
 }
 .hero-tag {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #e2e8f0;
-    padding: 7px 18px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #cbd5e1;
+    padding: 8px 20px;
     border-radius: 50px;
     font-size: 13px;
     font-weight: 500;
+    letter-spacing: 0.2px;
+    transition: background 0.2s, border-color 0.2s;
+}
+.hero-tag:hover {
+    background: rgba(59,130,246,0.12);
+    border-color: rgba(59,130,246,0.35);
 }
 
 /* ── Stat Cards ───────────────────────────────────────── */
@@ -368,17 +403,24 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 # ══════════════════════════════════════════════════════════════════════════════
 st.markdown(f"""
 <div class="hero-section">
-    <div class="hero-badge">🏫 PVGCOET · Design Thinking Project</div>
-    <h1 class="hero-title">Mess Feedback<br><span>Intelligence Dashboard</span></h1>
-    <p class="hero-subtitle">
-        A data-driven platform that transforms anonymous student mess feedback into
-        actionable insights — powered by statistical analysis and generative AI.
-    </p>
-    <div class="hero-tags">
-        <span class="hero-tag">📊 Statistical Analysis</span>
-        <span class="hero-tag">🤖 AI Insights</span>
-        <span class="hero-tag">📱 QR Feedback</span>
-        <span class="hero-tag">📈 Visualizations</span>
+    <div class="hero-inner">
+        <div class="hero-badge">🏫 PVGCOET &nbsp;·&nbsp; Design Thinking Project</div>
+        <h1 class="hero-title">
+            Mess Feedback<br>
+            <span>Intelligence Dashboard</span>
+        </h1>
+        <div class="hero-divider"></div>
+        <p class="hero-subtitle">
+            A data-driven platform that transforms anonymous student mess
+            feedback into actionable insights — powered by statistical
+            analysis and generative AI.
+        </p>
+        <div class="hero-tags">
+            <span class="hero-tag">📊 Statistical Analysis</span>
+            <span class="hero-tag">🤖 AI Insights</span>
+            <span class="hero-tag">📱 QR Feedback</span>
+            <span class="hero-tag">📈 Visualizations</span>
+        </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -752,6 +794,34 @@ st.markdown("""
     letter-spacing: 0.5px;
 }
 .site-footer span { color: #3b82f6; font-weight: 600; }
+.guide-block {
+    text-align: center;
+    margin: 28px auto 0 auto;
+    padding: 18px 32px;
+    background: rgba(59,130,246,0.06);
+    border: 1px solid rgba(59,130,246,0.18);
+    border-radius: 12px;
+    max-width: 380px;
+}
+.guide-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+.guide-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e2e8f0;
+}
+.guide-sub {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 3px;
+    font-weight: 400;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -785,10 +855,20 @@ for col, (emoji, name, role, badge) in zip(cols, team):
         </div>
         """, unsafe_allow_html=True)
 
+# Guide / Faculty Mentor
+st.markdown("""
+<div class="guide-block">
+    <div class="guide-label">🎓 Guided By</div>
+    <div class="guide-name">Prof. Dr. P. V. Rishbud</div>
+    <div class="guide-sub">Faculty Mentor &nbsp;&middot;&nbsp; PVGCOET</div>
+</div>
+""", unsafe_allow_html=True)
+
 # Footer
 st.markdown("""
 <div class="site-footer">
     <p><span>PVGCOET</span> &nbsp;|&nbsp; Digital Feedback Management System &nbsp;|&nbsp; <span>2026</span></p>
 </div>
 """, unsafe_allow_html=True)
+
 
