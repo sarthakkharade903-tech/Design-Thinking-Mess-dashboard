@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import base64
+from config import DATA_FILE   # ← single source of truth
 
 st.set_page_config(
     page_title="Mess Feedback Dashboard",
@@ -12,7 +13,7 @@ st.set_page_config(
 # ── Load Data ──────────────────────────────────────────────────────────────────
 @st.cache_data
 def load_data():
-    df = pd.read_csv("RAW DATA PVGCOET Mess Feedback.csv")
+    df = pd.read_csv(DATA_FILE)
     df.rename(columns={
         "MEAL TYPE(Choose the meal you just had)": "Meal",
         "Food Temperature": "Temperature",

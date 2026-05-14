@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+from config import DATA_FILE   # ← single source of truth
 
 st.set_page_config(
     page_title="Charts & Visualizations | Mess Feedback",
@@ -11,7 +12,7 @@ st.set_page_config(
 # ── Load Data ──────────────────────────────────────────────────────────────────
 @st.cache_data
 def load_data():
-    df = pd.read_csv("Updated PVGCOET Mess Feedback.csv")
+    df = pd.read_csv(DATA_FILE)
     df.rename(columns={
         "MEAL TYPE(Choose the meal you just had)": "Meal",
         "Food Temperature": "Temperature",

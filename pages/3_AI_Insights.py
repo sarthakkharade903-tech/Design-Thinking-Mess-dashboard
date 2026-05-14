@@ -4,6 +4,7 @@ import os
 import re
 import requests
 from dotenv import load_dotenv
+from config import DATA_FILE   # ← single source of truth
 
 # ── Config & API ───────────────────────────────────────────────────────────────
 load_dotenv()
@@ -19,7 +20,7 @@ st.set_page_config(
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_csv("Updated PVGCOET Mess Feedback.csv")
+        df = pd.read_csv(DATA_FILE)
         df.rename(columns={
             "MEAL TYPE(Choose the meal you just had)": "Meal",
             "Food Temperature": "Temperature",
