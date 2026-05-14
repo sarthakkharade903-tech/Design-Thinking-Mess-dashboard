@@ -2,29 +2,16 @@
 import streamlit as st
 import pandas as pd
 import base64
-from config import DATA_FILE   # ← single source of truth
+from config import load_data   # ← shared loader (handles all CSV formats)
 
 st.set_page_config(
     page_title="Mess Feedback Dashboard",
     page_icon="🍔",
     layout="wide"
 )
- 
-# ── Load Data ──────────────────────────────────────────────────────────────────
-@st.cache_data
-def load_data():
-    df = pd.read_csv(DATA_FILE)
-    df.rename(columns={
-        "MEAL TYPE(Choose the meal you just had)": "Meal",
-        "Food Temperature": "Temperature",
-        "Your Experience": "Experience",
-        "Taste  ": "Taste"
-    }, inplace=True)
-    if 'Timestamp' in df.columns:
-        df.drop(columns=['Timestamp'], inplace=True)
-    return df
 
 df = load_data()
+
 
 numeric_cols  = df.select_dtypes(include='number').columns
 total_resp    = len(df)

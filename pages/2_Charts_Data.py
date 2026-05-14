@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from config import DATA_FILE   # ← single source of truth
+from config import load_data   # ← shared loader (handles all CSV formats)
 
 st.set_page_config(
     page_title="Charts & Visualizations | Mess Feedback",
@@ -9,21 +9,8 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── Load Data ──────────────────────────────────────────────────────────────────
-@st.cache_data
-def load_data():
-    df = pd.read_csv(DATA_FILE)
-    df.rename(columns={
-        "MEAL TYPE(Choose the meal you just had)": "Meal",
-        "Food Temperature": "Temperature",
-        "Your Experience": "Experience",
-        "Taste  ": "Taste"
-    }, inplace=True)
-    if 'Timestamp' in df.columns:
-        df.drop(columns=['Timestamp'], inplace=True)
-    return df
-
 df          = load_data()
+
 ALL_PARAMS  = ["Taste", "Temperature", "Quantity", "Hygiene", "Experience"]
 PARAMS      = [c for c in ALL_PARAMS if c in df.columns]
 MEALS       = sorted(df["Meal"].unique().tolist()) if "Meal" in df.columns else []

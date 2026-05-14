@@ -4,7 +4,7 @@ import os
 import re
 import requests
 from dotenv import load_dotenv
-from config import DATA_FILE   # ← single source of truth
+from config import load_data   # ← shared loader (handles all CSV formats)
 
 # ── Config & API ───────────────────────────────────────────────────────────────
 load_dotenv()
@@ -16,24 +16,8 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── Load Data ──────────────────────────────────────────────────────────────────
-@st.cache_data
-def load_data():
-    try:
-        df = pd.read_csv(DATA_FILE)
-        df.rename(columns={
-            "MEAL TYPE(Choose the meal you just had)": "Meal",
-            "Food Temperature": "Temperature",
-            "Your Experience": "Experience",
-            "Taste  ": "Taste"
-        }, inplace=True)
-        if 'Timestamp' in df.columns:
-            df.drop(columns=['Timestamp'], inplace=True)
-        return df
-    except Exception:
-        return None
-
 df = load_data()
+
 
 # Pre-compute stats for summary cards
 if df is not None and not df.empty:
