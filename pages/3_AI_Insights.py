@@ -8,7 +8,7 @@ from config import load_data   # ← shared loader (handles all CSV formats)
 
 # ── Config & API ───────────────────────────────────────────────────────────────
 load_dotenv()
-API_KEY = os.getenv("OPENROUTER_API_KEY")
+API_KEY = os.getenv("GROQ_API_KEY")
 
 st.set_page_config(
     page_title="AI Insights | Mess Feedback",
@@ -289,25 +289,42 @@ if not generate:
 # ══════════════════════════════════════════════════════════════════════════════
 # AI GENERATION & OUTPUT
 # ══════════════════════════════════════════════════════════════════════════════
-summary_stats = df.describe().to_csv()
-raw_data_csv  = df.to_csv(index=False)
+# Build clean summary stats to pass to the model
+numeric_cols  = df.select_dtypes(include='number').columns.tolist()
+col_avgs      = df[numeric_cols].mean().round(2).to_dict()
+meal_avgs     = df.groupby("Meal")[numeric_cols].mean().round(2).to_string() if "Meal" in df.columns else "N/A"
+total         = len(df)
 
-prompt = f"""You are an expert data analyst. I am providing student feedback data for a mess/cafeteria.
-Scores are out of 5 for Taste, Temperature, Quantity, Hygiene, and Experience.
+prompt = f"""You are a helpful assistant analyzing student mess feedback for a college cafeteria (PVGCOET).
 
-Summary statistics:
-{summary_stats}
+Dataset: {total} student responses. Each student rated the following on a scale of 1 to 5:
+Taste, Temperature, Quantity, Hygiene, Experience.
 
-Raw data:
-{raw_data_csv}
+Overall average scores:
+{col_avgs}
 
-Analyze this data and provide insights structured EXACTLY with these markdown headings:
+Average scores by meal type:
+{meal_avgs}
+
+Your task: Write a clear, friendly, and honest feedback report that a student can read and understand.
+Avoid technical jargon. Be specific about which meals or parameters scored well or poorly.
+Use real numbers from the data to support each point.
+
+Structure your response EXACTLY with these 4 headings (use ### before each):
+
 ### Overall Summary
-### Positive Insights
-### Negative Insights
-### Suggestions
+A 3-4 sentence overview of the general mess quality. Mention the overall average, best and worst performing parameters, and total responses.
 
-Keep insights concise, actionable, and data-specific."""
+### Positive Insights
+List 3-4 things the mess is doing well. Use bullet points. Mention specific meals or parameters with their actual scores.
+
+### Negative Insights
+List 3-4 clear problems or low-rated areas. Use bullet points. Mention specific meals or parameters with their actual scores. Be honest but respectful.
+
+### Suggestions
+List 3-5 specific, actionable recommendations the mess management can implement to improve student satisfaction. Be practical and direct.
+
+Tone: Friendly, clear, data-backed. Written for students and mess managers alike."""
 
 # Loading state with styled spinner message
 loading_placeholder = st.empty()
@@ -323,20 +340,25 @@ loading_placeholder.markdown("""
 """, unsafe_allow_html=True)
 
 try:
-    with st.spinner("Contacting OpenRouter API…"):
+    with st.spinner("Contacting Groq AI…"):
         headers = {
             "Authorization": f"Bearer {API_KEY}",
             "Content-Type":  "application/json"
         }
-        full_prompt = "You are a helpful AI assistant analysing mess feedback data.\n\n" + prompt
         payload = {
-            "model":    "google/gemma-4-31b-it:free",
-            "messages": [{"role": "user", "content": full_prompt}],
-            "temperature": 0.3,
-            "max_tokens":  1000
+            "model":    "llama-3.3-70b-versatile",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are a helpful data analyst assistant. Always respond in clean, readable English. Use bullet points where asked. Never use markdown code blocks. Be specific with numbers from the data."
+                },
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.4,
+            "max_tokens":  1200
         }
         response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             headers=headers,
             json=payload,
             timeout=60
